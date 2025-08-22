@@ -3,7 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* * {
+* {
   cursor: none !important;
 }
 
@@ -11,7 +11,7 @@ input,
 textarea,
 select {
   cursor: text !important;
-} */
+}
 
 @theme {
   --font-head: var(--font-head);
@@ -119,11 +119,11 @@ select {
   --color-sidebar-ring: var(--sidebar-ring);
   --animate-grid: grid 15s linear infinite;
   @keyframes grid {
-  0% {
-    transform: translateY(-50%);
+    0% {
+      transform: translateY(-50%);
     }
-  100% {
-    transform: translateY(0);
+    100% {
+      transform: translateY(0);
     }
   }
 }
