@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import { GetDBSettings, IDBSettings } from '@/sharedCode/common'
+import { GetDBSettings, IDBSettings } from '@/app/sharedCode/common'
 import { NextResponse , NextRequest} from 'next/server';
 
 let connectionParams = GetDBSettings()
