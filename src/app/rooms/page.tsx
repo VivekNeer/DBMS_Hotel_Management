@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/retroui/Button";
 import { Card } from "@/components/retroui/Card";
 import { Select } from "@/components/retroui/Select";
@@ -20,6 +21,7 @@ interface Room {
 }
 
 export default function Rooms() {
+  const router = useRouter();
   const [roomType, setRoomType] = useState<string>("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [searchResults, setSearchResults] = useState<Room[]>([]);
@@ -64,6 +66,20 @@ export default function Rooms() {
 
   const handleSearch = () => {
     fetchRooms();
+  };
+
+  const handleBookNow = (selectedRoomType: string) => {
+    const params = new URLSearchParams();
+    params.set("roomType", selectedRoomType);
+
+    if (dateRange?.from) {
+      params.set("checkIn", format(dateRange.from, "yyyy-MM-dd"));
+    }
+    if (dateRange?.to) {
+      params.set("checkOut", format(dateRange.to, "yyyy-MM-dd"));
+    }
+
+    router.push(`/book?${params.toString()}`);
   };
 
   return (
@@ -160,7 +176,9 @@ export default function Rooms() {
                       <p className="text-xl font-semibold text-primary">
                         ${room.cost_per_day}/day
                       </p>
-                      <Button>Book Now</Button>
+                      <Button onClick={() => handleBookNow(room.room_type)}>
+                        Book Now
+                      </Button>
                     </div>
                   </Card.Content>
                 </Card>

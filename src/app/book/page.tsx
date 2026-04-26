@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface CreateBookingResponse {
@@ -23,6 +23,23 @@ const BookingForm: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomType = urlParams.get("roomType");
+    const checkIn = urlParams.get("checkIn");
+    const checkOut = urlParams.get("checkOut");
+
+    setForm((prev) => ({
+      ...prev,
+      roomType:
+        roomType === "Single" || roomType === "Double" || roomType === "Suite"
+          ? roomType
+          : prev.roomType,
+      checkIn: checkIn ?? prev.checkIn,
+      checkOut: checkOut ?? prev.checkOut,
+    }));
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
