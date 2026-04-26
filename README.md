@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DBMS Hotel Management
 
-## Getting Started
+Next.js hotel management app with API routes migrated to MongoDB.
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 20+
+- npm 10+
+- A MongoDB instance (Atlas or local)
+
+## Install
+
+```bash
+npm install
+```
+
+## Environment Variables
+
+Create a `.env` file in the project root (or copy from `.env.example`) and set:
+
+```env
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-url>/?retryWrites=true&w=majority&appName=<app-name>
+MONGODB_DB=hotel_management
+```
+
+### Where do these values come from?
+
+1. `MONGODB_URI`
+   - MongoDB Atlas: Go to Atlas -> Database -> Connect -> Drivers.
+   - Copy the connection string and replace `<username>`, `<password>`, and `<cluster-url>`.
+   - If your password has special characters, URL-encode it.
+
+2. `MONGODB_DB`
+   - This is the database name used by this app.
+   - You can keep `hotel_management` or choose another name.
+
+### Atlas checklist (important)
+
+1. Create a database user with read/write access.
+2. Add your current IP in Network Access (or allow `0.0.0.0/0` only for temporary testing).
+3. Use that user in your `MONGODB_URI`.
+
+## Run Locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build & Validation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run build
+```
 
-## Learn More
+## Database Helpers
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run db:check
+npm run db:seed
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Current MongoDB-backed Endpoints
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `GET /api/rooms`
+- `GET /api/bookings`
+- `GET /api/bookings/:id`
+- `POST /api/bookings`
 
-## Deploy on Vercel
+## Recommended Initial Collections
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Use these collection names:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `rooms`
+- `bookings`
+
+Suggested fields:
+
+- `rooms`: `room_no`, `floor_no`, `room_type`, `cost_per_day`, `status`
+- `bookings`: `room_no`, `guest_name`, `guest_email`, `check_in_date`, `check_out_date`
+
+Suggested indexes:
+
+```js
+db.rooms.createIndex({ room_no: 1 }, { unique: true });
+db.rooms.createIndex({ status: 1, room_type: 1 });
+
+db.bookings.createIndex({ room_no: 1, check_in_date: 1, check_out_date: 1 });
+db.bookings.createIndex({ guest_email: 1, check_in_date: -1 });
+```
+
+## Notes
+
+- The app throws `Missing MONGODB_URI environment variable` when DB-backed API routes are called without `MONGODB_URI`.
+- Keep `.env` out of git; do not commit secrets.

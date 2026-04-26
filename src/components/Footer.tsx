@@ -9,7 +9,7 @@ export default function Footer() {
         {/* Column 1: About */}
         <div className="flex flex-col">
           <h3 className="text-lg font-bold text-foreground">
-            Hilbert's Grand Hotel
+            Hilbert&apos;s Grand Hotel
           </h3>
           <p className="mt-2 text-sm text-muted-foreground">
             Experience infinite luxury and comfort in a truly retro setting
@@ -60,8 +60,8 @@ export default function Footer() {
       </div>
       <div className="container mx-auto mt-12 max-w-7xl border-t border-border pt-8 text-center">
         <p className="text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} Hilbert's Grand Hotel. All Rights
-          Reserved.
+          &copy; {new Date().getFullYear()} Hilbert&apos;s Grand Hotel. All
+          Rights Reserved.
         </p>
       </div>
     </footer>

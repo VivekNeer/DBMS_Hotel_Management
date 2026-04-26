@@ -20,7 +20,7 @@ function DesktopNavbar() {
       {/* Left: Logo */}
       <div className="flex items-center min-w-[150px]">
         <Link href="/" className="flex items-center space-x-2">
-          {<Logo className="h-16 w-16 text-foreground"/>}
+          {<Logo className="h-16 w-16 text-foreground" />}
         </Link>
       </div>
 
@@ -62,7 +62,7 @@ function MobileNavbar() {
 
         {/* Toggle button */}
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
           onClick={() => setIsOpen((prev) => !prev)}
         >

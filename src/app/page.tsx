@@ -1,5 +1,5 @@
 "use client";
-import HeroPage from "@/components/HeroPage";
+import HeroPage from "@/components/Heropage";
 import FeaturesSection from "@/components/FeaturesSection";
 import FaqSection from "@/components/FaqSection";
 

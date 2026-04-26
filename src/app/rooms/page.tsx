@@ -47,8 +47,10 @@ export default function Rooms() {
       }
       const data: Room[] = await response.json();
       setSearchResults(data);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Failed to fetch rooms";
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -149,7 +151,7 @@ export default function Rooms() {
                       {room.next_booked_from
                         ? `Available until ${format(
                             new Date(room.next_booked_from),
-                            "dd MMM yyyy"
+                            "dd MMM yyyy",
                           )}`
                         : "Available indefinitely"}
                     </p>

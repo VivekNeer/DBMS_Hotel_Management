@@ -139,7 +139,6 @@ const BookingForm: React.FC = () => {
             onChange={handleChange}
             className="w-full border px-3 py-2 rounded"
           >
-            <option value="Standard">Standard</option>
             <option value="Single">Single</option>
             <option value="Double">Double</option>
             <option value="Suite">Suite</option>

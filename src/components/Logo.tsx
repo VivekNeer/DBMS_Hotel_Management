@@ -1,6 +1,8 @@
 import React from "react";
 
-const Logo = (props: React.SVGProps<SVGSVGElement>) => {
+type LogoProps = React.SVGProps<SVGSVGElement>;
+
+const Logo = ({ className, ...props }: LogoProps) => {
   return (
     <svg
       width="99"
@@ -8,6 +10,8 @@ const Logo = (props: React.SVGProps<SVGSVGElement>) => {
       viewBox="0 0 99 55"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      {...props}
     >
       <path
         d="M25.6294 16.1315C24.2654 16.993 23.4039 18.4288 23.4039 20.08C23.4039 21.7312 24.1936 23.167 25.6294 24.0285C26.3474 24.4592 27.2089 24.7464 28.0704 24.7464C28.9318 24.7464 29.5062 24.6028 30.1523 24.2439L38.2647 20.1518L30.2241 15.9879C28.7883 15.27 27.0653 15.3418 25.7012 16.1315H25.6294ZM29.578 17.1366L35.393 20.1518L29.578 23.0952C28.5011 23.5978 27.2806 23.5978 26.3474 22.9516C25.4141 22.3055 24.768 21.3004 24.768 20.08C24.768 18.8595 25.3423 17.8545 26.3474 17.2083C26.8499 16.8494 27.496 16.7058 28.0704 16.7058C28.6447 16.7058 29.1472 16.8494 29.578 17.0648V17.1366Z"
