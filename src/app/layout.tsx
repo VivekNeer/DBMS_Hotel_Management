@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { getCurrentUser } from "@/lib/auth/session";
 
 const archivoBlack = Archivo_Black({
   subsets: ["latin"],
@@ -20,11 +21,13 @@ const space = Space_Grotesk({
   display: "swap",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await getCurrentUser();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${archivoBlack.variable} ${space.variable}`}>
@@ -35,7 +38,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="cursor-none">
-            <Navbar />
+            <Navbar user={user} />
             <SmoothCursor />
             {children}
             <Footer />

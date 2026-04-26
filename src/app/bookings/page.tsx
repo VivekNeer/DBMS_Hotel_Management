@@ -153,7 +153,9 @@ export default function BookingsPage() {
 
                 return (
                   <tr key={booking._id} className="border-t">
-                    <td className="px-4 py-3 font-mono text-xs">{booking._id}</td>
+                    <td className="px-4 py-3 font-mono text-xs">
+                      {booking._id}
+                    </td>
                     <td className="px-4 py-3">
                       <p className="font-medium">{booking.guest_name}</p>
                       <p className="text-xs text-muted-foreground">
@@ -164,7 +166,8 @@ export default function BookingsPage() {
                       {booking.room_type} #{booking.room_no}
                     </td>
                     <td className="px-4 py-3">
-                      {checkIn.toLocaleDateString()} - {checkOut.toLocaleDateString()}
+                      {checkIn.toLocaleDateString()} -{" "}
+                      {checkOut.toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3">{status}</td>
                   </tr>
@@ -177,4 +180,3 @@ export default function BookingsPage() {
     </main>
   );
 }
-

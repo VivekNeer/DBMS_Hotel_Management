@@ -1,6 +1,7 @@
 export const COLLECTIONS = {
   rooms: "rooms",
   bookings: "bookings",
+  users: "users",
 } as const;
 
 export const ROOM_TYPES = ["Single", "Double", "Suite"] as const;
@@ -25,5 +26,12 @@ export interface BookingDocument {
   guests: number;
   check_in_date: Date;
   check_out_date: Date;
+  created_at: Date;
+}
+
+export interface UserDocument {
+  name: string;
+  email: string;
+  password_hash: string;
   created_at: Date;
 }

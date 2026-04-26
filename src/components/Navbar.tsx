@@ -2,9 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/retroui/Button";
 import { Menu, X } from "lucide-react";
 import Logo from "./Logo";
+
+export interface SessionUser {
+  name: string;
+  email: string;
+}
 
 // Common links
 const navLinks = [
@@ -14,7 +20,7 @@ const navLinks = [
 ];
 
 // Desktop Layout
-function DesktopNavbar() {
+function DesktopNavbar({ user, onLogout }: { user?: SessionUser | null; onLogout: () => void }) {
   return (
     <div className="hidden md:flex w-full h-16 items-center justify-between px-4 max-w-7xl mx-auto">
       {/* Left: Logo */}
@@ -40,15 +46,30 @@ function DesktopNavbar() {
 
       {/* Right: Auth buttons */}
       <div className="flex items-center justify-end min-w-[220px] space-x-2">
-        <Button variant="secondary">Login</Button>
-        <Button>Sign Up</Button>
+        {user ? (
+          <>
+            <span className="text-sm font-medium mr-2">Hi, {user.name}</span>
+            <Button variant="secondary" onClick={onLogout}>
+              Logout
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button variant="secondary" asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/signup">Sign Up</Link>
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );
 }
 
 // Mobile Layout
-function MobileNavbar() {
+function MobileNavbar({ user, onLogout }: { user?: SessionUser | null; onLogout: () => void }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -87,10 +108,31 @@ function MobileNavbar() {
             ))}
 
             <div className="flex w-full gap-4 pt-4">
-              <Button variant="secondary" className="flex-1">
-                Login
-              </Button>
-              <Button className="flex-1">Sign Up</Button>
+              {user ? (
+                <Button
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => {
+                    setIsOpen(false);
+                    onLogout();
+                  }}
+                >
+                  Logout
+                </Button>
+              ) : (
+                <>
+                  <Button variant="secondary" className="flex-1" asChild>
+                    <Link href="/login" onClick={() => setIsOpen(false)}>
+                      Login
+                    </Link>
+                  </Button>
+                  <Button className="flex-1" asChild>
+                    <Link href="/signup" onClick={() => setIsOpen(false)}>
+                      Sign Up
+                    </Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -100,11 +142,23 @@ function MobileNavbar() {
 }
 
 // Wrapper
-export default function Navbar() {
+export default function Navbar({ user }: { user?: SessionUser | null }) {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to logout", error);
+    }
+  };
+
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <DesktopNavbar />
-      <MobileNavbar />
+      <DesktopNavbar user={user} onLogout={handleLogout} />
+      <MobileNavbar user={user} onLogout={handleLogout} />
     </header>
   );
 }

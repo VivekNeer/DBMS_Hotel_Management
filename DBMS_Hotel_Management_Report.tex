@@ -1,0 +1,142 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\geometry{a4paper, margin=1in}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{\textbf{DBMS Mini Project Report}\\ Hotel Management System}
+\author{Vivek Neeralagi}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction}
+The Hilbert's Grand Hotel Management System is a comprehensive web-based application designed to streamline hotel operations. The system enables users to browse available rooms, book stays, and manage their profiles, while providing an administrative dashboard to manage hotel inventory.
+
+\section{Technology Stack}
+\begin{itemize}
+    \item \textbf{Frontend:} Next.js (React), Tailwind CSS
+    \item \textbf{Backend:} Next.js API Routes (Node.js)
+    \item \textbf{Database:} MongoDB Atlas
+    \item \textbf{Authentication:} Custom Session Management with Cookies, bcryptjs for password hashing.
+\end{itemize}
+
+\section{Database Design and Architecture}
+The system uses a NoSQL database (MongoDB) for flexible and scalable data storage.
+
+\subsection{Database Collections}
+\begin{itemize}
+    \item \textbf{users:} Stores registered customer details (Name, Email, Password Hash).
+    \item \textbf{rooms:} Stores hotel room inventory (Room Number, Floor, Type, Cost, Status).
+    \item \textbf{bookings:} Stores reservations (Guest details, Room Number, Check-In/Check-Out Dates).
+\end{itemize}
+
+\subsection{Schema Structure}
+\begin{lstlisting}[language=json, caption=Sample Room Document]
+{
+  "_id": "69ee4dfad004cd36264e3646",
+  "room_no": 101,
+  "cost_per_day": 120,
+  "floor_no": 1,
+  "room_type": "Single",
+  "status": "Available"
+}
+\end{lstlisting}
+
+\section{Implementation Details}
+
+\subsection{MongoDB Atlas Setup}
+The database is hosted on MongoDB Atlas. Setting up involves:
+\begin{enumerate}
+    \item Creating a free cluster (Cluster0).
+    \item Configuring \textbf{Network Access} to whitelist the application's IP address (resolving SSL handshake errors like \texttt{SSL alert number 80}).
+    \item Obtaining the connection URI and configuring the \texttt{.env} file.
+\end{enumerate}
+
+\subsection{Application Initialization and Seeding}
+To populate the database with initial room and booking data, a seeding script was implemented and executed using \texttt{npm run db:seed}. This automatically inserts mock data into the \texttt{rooms} and \texttt{bookings} collections.
+
+\subsection{Features Implemented}
+\begin{itemize}
+    \item \textbf{Authentication Flow:} Secure Sign Up and Login utilizing \texttt{bcryptjs} and HTTP-only cookies.
+    \item \textbf{Data Pre-filling:} Once authenticated, user details (Name, Email) are automatically fetched server-side and pre-filled into the Booking Form and Profile page.
+    \item \textbf{Admin Dashboard:} Accessible at \texttt{/admin}. Provides CRUD operations for rooms. New rooms can be added using intuitive dropdown selections for room type and status.
+\end{itemize}
+
+\section{Application Walkthrough}
+
+The following sections showcase the key interfaces of the application. 
+
+% Please rename your image files to match the filenames below or change the filenames in this document.
+\subsection{Rooms and Booking}
+Users can search for available rooms using a dynamic date-picker. Upon selecting a date range, the system queries MongoDB to filter out overlapping bookings.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{rooms_page.png}
+    \caption{Rooms Page with Date Picker}
+\end{figure}
+
+\subsection{My Bookings}
+Customers can view their upcoming, active, and completed bookings in a structured dashboard.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{my_bookings.png}
+    \caption{My Bookings Dashboard}
+\end{figure}
+
+\subsection{User Profile}
+The profile page securely displays the authenticated user's personal information.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{profile_page.png}
+    \caption{User Profile Page}
+\end{figure}
+
+\subsection{Database Management}
+The underlying data is managed in MongoDB Atlas, allowing seamless scaling and monitoring.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{mongodb_atlas.png}
+    \caption{MongoDB Atlas Data Explorer showing Rooms Collection}
+\end{figure}
+
+\section{Conclusion}
+The Hotel Management System successfully integrates a modern Next.js frontend with a robust MongoDB backend. The system efficiently handles user authentication, data pre-filling, dynamic availability checking, and provides a comprehensive administrative dashboard for inventory management.
+
+\end{document}
