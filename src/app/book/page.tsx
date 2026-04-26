@@ -1,19 +1,31 @@
 "use client";
-import React, { use } from "react";
+import React from "react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+interface CreateBookingResponse {
+  bookingId: string;
+}
+
+interface ErrorResponse {
+  error: string;
+}
 
 const BookingForm: React.FC = () => {
+  const router = useRouter();
   const [form, setForm] = useState({
     name: "",
     email: "",
     checkIn: "",
     checkOut: "",
     guests: 1,
-    roomType: "Standard",
+    roomType: "Single",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({
@@ -22,15 +34,45 @@ const BookingForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Submit booking logic here
-    alert("Booking submitted!");
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = (await response.json()) as
+        | CreateBookingResponse
+        | ErrorResponse;
+      if (!response.ok || !("bookingId" in data)) {
+        const message =
+          "error" in data ? data.error : "Failed to create booking";
+        throw new Error(message);
+      }
+
+      router.push(`/confirmation/${data.bookingId}`);
+    } catch (submitError: unknown) {
+      const message =
+        submitError instanceof Error
+          ? submitError.message
+          : "Failed to create booking";
+      setError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
       <h2 className="text-2xl font-bold mb-4">Hotel Booking Form</h2>
+      {error ? <p className="mb-4 text-sm text-red-600">{error}</p> : null}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block mb-1 font-medium">Name</label>
@@ -98,15 +140,17 @@ const BookingForm: React.FC = () => {
             className="w-full border px-3 py-2 rounded"
           >
             <option value="Standard">Standard</option>
-            <option value="Deluxe">Deluxe</option>
+            <option value="Single">Single</option>
+            <option value="Double">Double</option>
             <option value="Suite">Suite</option>
           </select>
         </div>
         <button
           type="submit"
+          disabled={isSubmitting}
           className="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700"
         >
-          Book Now
+          {isSubmitting ? "Booking..." : "Book Now"}
         </button>
       </form>
     </div>
